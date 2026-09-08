@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { pb } from '../lib/pb'
+import { NO_AUTH, pb } from '../lib/pb'
+import { getMockLive, startMockTicker, subscribeMock } from '../lib/mock'
 import type { SystemStat } from '../lib/types'
 
 /**
@@ -8,11 +9,24 @@ import type { SystemStat } from '../lib/types'
  * default 1-minute stats interval.
  */
 export function useSystemStats(systemId: string | undefined, minutes = 60) {
-  const [stats, setStats] = useState<SystemStat[]>([])
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<SystemStat[]>(() =>
+    NO_AUTH && systemId ? (getMockLive().stats.get(systemId) ?? []) : [],
+  )
+  const [loading, setLoading] = useState(!NO_AUTH)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (NO_AUTH) {
+      startMockTicker()
+      setStats(systemId ? (getMockLive().stats.get(systemId) ?? []) : [])
+      setLoading(false)
+      const unsub = subscribeMock(() => {
+        if (!systemId) return
+        const series = getMockLive().stats.get(systemId)
+        if (series) setStats([...series])
+      })
+      return unsub
+    }
     if (!systemId) {
       setStats([])
       setLoading(false)

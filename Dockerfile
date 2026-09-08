@@ -3,8 +3,18 @@
 FROM node:24-alpine AS builder
 WORKDIR /app
 
+# Build-time configuration. Anything VITE_* ends up in the JS bundle.
 ARG VITE_BESZEL_URL=http://100.85.194.78:8090
-ENV VITE_BESZEL_URL=$VITE_BESZEL_URL
+ARG VITE_PB_EMAIL=
+ARG VITE_PB_PASSWORD=
+ARG VITE_SYSTEM_FLAGS=
+ARG VITE_NO_AUTH=
+
+ENV VITE_BESZEL_URL=$VITE_BESZEL_URL \
+    VITE_PB_EMAIL=$VITE_PB_EMAIL \
+    VITE_PB_PASSWORD=$VITE_PB_PASSWORD \
+    VITE_SYSTEM_FLAGS=$VITE_SYSTEM_FLAGS \
+    VITE_NO_AUTH=$VITE_NO_AUTH
 
 COPY package.json pnpm-lock.yaml* ./
 RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm install --frozen-lockfile=false

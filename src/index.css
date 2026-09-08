@@ -3,6 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  color-scheme: light;
+}
+:root.dark {
   color-scheme: dark;
 }
 
@@ -13,7 +16,7 @@ body,
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-100 antialiased;
+  @apply bg-zinc-50 text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
   font-family:
     ui-sans-serif,
     system-ui,

@@ -21,7 +21,7 @@ export default function AlertsPage() {
       </header>
 
       {error && (
-        <div className="rounded-md border border-red-900/50 bg-red-950/40 px-3 py-2 text-sm text-red-300">
+        <div className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300">
           {error}
         </div>
       )}
@@ -29,13 +29,13 @@ export default function AlertsPage() {
       {loading ? (
         <div className="text-sm text-zinc-500">加载中…</div>
       ) : alerts.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-zinc-800 p-12 text-center text-sm text-zinc-500">
+        <div className="rounded-lg border border-dashed border-zinc-300 p-12 text-center text-sm text-zinc-500 dark:border-zinc-200 dark:border-zinc-800">
           暂无告警
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-zinc-800">
+        <div className="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
           <table className="w-full text-sm">
-            <thead className="bg-zinc-900/60 text-left text-xs text-zinc-500">
+            <thead className="bg-zinc-100 text-left text-xs text-zinc-600 dark:bg-zinc-900/60 dark:text-zinc-500">
               <tr>
                 <th className="px-3 py-2">状态</th>
                 <th className="px-3 py-2">主机</th>
@@ -45,26 +45,26 @@ export default function AlertsPage() {
                 <th className="px-3 py-2">触发时间</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800">
+            <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
               {alerts.map((a) => (
-                <tr key={a.id} className="hover:bg-zinc-900/40">
+                <tr key={a.id} className="hover:bg-zinc-50 dark:hover:bg-zinc-900/40">
                   <td className="px-3 py-2">
                     <span className="inline-flex items-center gap-2">
                       <StatusDot status={a.active ? 'down' : 'up'} />
-                      <span className="text-xs text-zinc-400">
+                      <span className="text-xs text-zinc-600 dark:text-zinc-400">
                         {a.active ? 'active' : 'ok'}
                       </span>
                     </span>
                   </td>
-                  <td className="px-3 py-2 text-zinc-400">{systemName(a.system)}</td>
-                  <td className="px-3 py-2 text-zinc-200">{a.name}</td>
-                  <td className="px-3 py-2 font-mono text-zinc-300">
+                  <td className="px-3 py-2 text-zinc-600 dark:text-zinc-400">{systemName(a.system)}</td>
+                  <td className="px-3 py-2 text-zinc-800 dark:text-zinc-200">{a.name}</td>
+                  <td className="px-3 py-2 font-mono text-zinc-800 dark:text-zinc-300">
                     {a.value?.toFixed(2)}
                   </td>
-                  <td className="px-3 py-2 font-mono text-zinc-400">
+                  <td className="px-3 py-2 font-mono text-zinc-600 dark:text-zinc-400">
                     {a.min !== undefined ? `≥ ${a.min}` : '—'}
                   </td>
-                  <td className="px-3 py-2 text-zinc-400">{formatTime(a.triggered)}</td>
+                  <td className="px-3 py-2 text-zinc-600 dark:text-zinc-400">{formatTime(a.triggered)}</td>
                 </tr>
               ))}
             </tbody>
