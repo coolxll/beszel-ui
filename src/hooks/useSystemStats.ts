@@ -58,8 +58,9 @@ export function useSystemStats(systemId: string | undefined, minutes = 60) {
     }
     void load()
 
-    // Refresh every 30s so the chart stays live without a WS subscription.
-    const timer = window.setInterval(load, 30_000)
+    // Refresh every 15s so network speed and charts stay responsive without
+    // opening another realtime subscription.
+    const timer = window.setInterval(load, 15_000)
     return () => {
       cancelled = true
       window.clearInterval(timer)

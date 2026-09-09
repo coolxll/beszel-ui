@@ -4,16 +4,13 @@
 
 - 后端：直连 Beszel 内置 PocketBase（`VITE_BESZEL_URL`），无需任何额外服务。
 - 前端：Vite 8 + React 19 + TypeScript + Tailwind v4，自绘 SVG 图表，无重型图表库。
-- 部署：Komodo 一体化 Build + Deploy（见下文），目标主机 corp172-dev。
+- 部署：Vercel，入口为 <https://beszel-ui.vercel.app>，仅供 Tailnet 内使用。
 
-## 部署（Komodo）
+## 部署（Vercel）
 
-本仓库由 [homelab-infra](https://github.com/coolxll/homelab-infra) 仓库中的
-`hosts/corp172-dev/stacks/beszel-ui/` stack 引用。Komodo Stack 的
-`linked_repo` 指向本仓库，`run_build=true`，push 到 `main` 即触发
-corp172-dev 上的 rebuild + redeploy。
-
-详见 `homelab-infra/hosts/corp172-dev/stacks/beszel-ui/README.md`。
+生产环境由 Vercel 构建并托管静态前端。`VITE_BESZEL_URL`、只读 PocketBase
+服务账号和旗帜映射配置在 Vercel 项目环境变量中。corp172-dev 不再运行
+Komodo `beszel-ui` stack。
 
 ## 本地开发
 
@@ -32,11 +29,10 @@ pnpm dev
 （例如 `rn-direct` 的 `homelab-beszel` stack）的 env 中加入：
 
 ```
-BESZEL_CORS_ORIGINS=http://100.93.132.98:8091,http://127.0.0.1:5173
+BESZEL_CORS_ORIGINS=https://beszel-ui.vercel.app,http://127.0.0.1:5173
 ```
 
-然后重启 Beszel。源必须包含部署后的访问源（这里是 corp172-dev 的 Tailscale
-地址 `100.93.132.98:8091`）和本地 dev 源。
+然后重启 Beszel。源必须包含 Vercel 生产源和本地 dev 源。
 
 > 如果暂时无法修改 Beszel 配置，可以切换到"反代模式"：在 `nginx.conf` 中
 > 添加 `location /api/ { proxy_pass http://beszel:8090; }` 并把
@@ -61,12 +57,14 @@ docker run --rm -p 127.0.0.1:8091:80 beszel-ui:local
 ## 功能
 
 - **总览**：所有系统卡片，状态点、CPU/内存/磁盘进度条、上下行速率。
-- **详情**：单系统最近 60 分钟 CPU/内存/磁盘/网络趋势图 + 该系统容器列表。
+- **详情**：单系统最近 60 分钟 CPU/内存/磁盘/网络趋势图、自然日/月累计流量 + 容器列表。
+- **流量**：基于 Beszel agent 网卡累计字节计数的全主机今日/本月上传下载统计；计数器重置时自动续算。
 - **容器**：跨主机 Docker 容器表格。
 - **报警**：当前告警规则与触发状态。
 
 实时性：`systems` 走 PocketBase realtime 订阅；`system_stats` / `containers` /
-`alerts` 每 15–30s 轮询一次（足够低基数场景）。
+`alerts` 每 15–30s 轮询一次。实时网速每 15s 刷新，累计流量初次加载当月
+`system_stats`，之后每 60s 只增量读取新记录。
 
 ## 不做的事
 

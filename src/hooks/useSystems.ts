@@ -99,7 +99,7 @@ export function useSystems() {
       }
     }
     void loadLatestStats()
-    const statsTimer = window.setInterval(loadLatestStats, 30_000)
+    const statsTimer = window.setInterval(loadLatestStats, 15_000)
 
     // Live updates from PocketBase realtime.
     let unsub: (() => void) | undefined

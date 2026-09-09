@@ -120,6 +120,8 @@ function buildInitialLive(): MockLive {
     let dp = seed.dpBase
     let nrKB = seed.nrBaseKB
     let nsKB = seed.nsBaseKB
+    let totalRecv = 0
+    let totalSent = 0
 
     const series: SystemStat[] = []
     for (let i = POINTS - 1; i >= 0; i--) {
@@ -130,6 +132,8 @@ function buildInitialLive(): MockLive {
       dp = walk(dp, 0.1, 5, 98, r)
       nrKB = walk(nrKB * spike, seed.nrBaseKB * 0.4, 20, seed.nrBaseKB * 6, r)
       nsKB = walk(nsKB * spike, seed.nsBaseKB * 0.4, 10, seed.nsBaseKB * 6, r)
+      totalRecv += nrKB * 1024 * 60
+      totalSent += nsKB * 1024 * 60
 
       const ts = new Date(now - i * 60_000).toISOString()
       series.push({
@@ -145,7 +149,15 @@ function buildInitialLive(): MockLive {
           dp,
           d: seed.diskGB,
           du: seed.diskGB * dp / 100,
-          b: [nrKB, nsKB],
+          b: [nsKB * 1024, nrKB * 1024],
+          ni: {
+            eth0: [
+              nsKB * 1024,
+              nrKB * 1024,
+              totalSent,
+              totalRecv,
+            ],
+          },
         },
       })
     }

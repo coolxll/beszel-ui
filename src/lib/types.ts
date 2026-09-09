@@ -54,8 +54,8 @@ export interface SystemStat extends PBRecord {
     dp?: number
     d?: number // disk total, GiB
     du?: number // disk used, GiB
-    b?: [number, number] // aggregate [received, sent], KiB/s
-    ni?: Record<string, [number, number, number, number]> // per-interface rates + totals, KiB units
+    b?: [number, number] // aggregate [sent, received], bytes/s
+    ni?: Record<string, [number, number, number, number]> // [upload B/s, download B/s, total upload bytes, total download bytes]
     // Legacy fields kept for older Beszel/mock payload compatibility.
     ns?: number
     nr?: number

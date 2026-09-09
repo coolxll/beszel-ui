@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage'
 import ServerDetailPage from './pages/ServerDetailPage'
 import ContainersPage from './pages/ContainersPage'
 import AlertsPage from './pages/AlertsPage'
+import TrafficPage from './pages/TrafficPage'
 
 function RequireAuth() {
   const { isAuthed, isReady } = useAuth()
@@ -55,6 +56,7 @@ export const router = createBrowserRouter([
           { path: '/', element: <DashboardPage /> },
           { path: '/servers/:id', element: <ServerDetailPage /> },
           { path: '/containers', element: <ContainersPage /> },
+          { path: '/traffic', element: <TrafficPage /> },
           { path: '/alerts', element: <AlertsPage /> },
         ],
       },

@@ -9,6 +9,7 @@ import TimeSeriesChart from '../components/charts/TimeSeriesChart'
 import { osMeta } from '../lib/fleet'
 import { flagForSystem } from '../lib/flags'
 import { diskMetrics, networkRates } from '../lib/metrics'
+import { emptyPeriodTraffic, useNetworkTraffic } from '../hooks/useNetworkTraffic'
 import {
   formatBytes,
   formatBytesPerSec,
@@ -23,6 +24,7 @@ export default function ServerDetailPage() {
   const systemMeta = id ? meta.get(id) : undefined
   const { stats, loading: statsLoading } = useSystemStats(id, 60)
   const { containers, loading: containersLoading } = useContainers(id)
+  const { traffic, loading: trafficLoading } = useNetworkTraffic(system ? [system] : [])
 
   if (systemsLoading) return <div className="text-sm text-zinc-500">加载中…</div>
   if (!system) {
@@ -43,6 +45,7 @@ export default function ServerDetailPage() {
   const latestStats = stats[stats.length - 1]?.stats
   const disk = diskMetrics(info, latestStats)
   const network = networkRates(latestStats)
+  const periodTraffic = traffic.get(system.id) ?? emptyPeriodTraffic()
 
   return (
     <div className="space-y-5">
@@ -81,6 +84,11 @@ export default function ServerDetailPage() {
           label="网络"
           value={`↓ ${formatBytesPerSec(network.recvBps)} ↑ ${formatBytesPerSec(network.sentBps)}`}
         />
+      </section>
+
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <TrafficSummaryCard label="今日累计" totals={periodTraffic.today} loading={trafficLoading} complete={periodTraffic.todayComplete} />
+        <TrafficSummaryCard label="本月累计" totals={periodTraffic.month} loading={trafficLoading} complete={periodTraffic.monthComplete} />
       </section>
 
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -184,6 +192,36 @@ export default function ServerDetailPage() {
           </div>
         )}
       </section>
+    </div>
+  )
+}
+
+function TrafficSummaryCard({
+  label,
+  totals,
+  loading,
+  complete,
+}: {
+  label: string
+  totals: { recvBytes: number; sentBytes: number }
+  loading: boolean
+  complete: boolean
+}) {
+  return (
+    <div className="rounded-lg border border-zinc-200 bg-white p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+      <div className="text-xs text-zinc-500">
+        {label}
+        {!loading && !complete && (
+          <span className="ml-1 text-amber-600 dark:text-amber-400">（部分数据）</span>
+        )}
+      </div>
+      <div className="mt-1 font-mono text-lg text-zinc-900 dark:text-zinc-100">
+        {loading ? '加载中…' : formatBytes(totals.recvBytes + totals.sentBytes)}
+      </div>
+      <div className="mt-1 flex gap-4 font-mono text-xs text-zinc-500">
+        <span>↓ {loading ? '—' : formatBytes(totals.recvBytes)}</span>
+        <span>↑ {loading ? '—' : formatBytes(totals.sentBytes)}</span>
+      </div>
     </div>
   )
 }

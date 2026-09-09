@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from 'react-router'
-import { Bell, Boxes, LayoutDashboard, LogOut, Moon, Server, Sun } from 'lucide-react'
+import { Activity, Bell, Boxes, LayoutDashboard, LogOut, Moon, Server, Sun } from 'lucide-react'
 import clsx from 'clsx'
 import { useAuth } from '../auth/AuthContext'
 import { useTheme } from '../theme'
@@ -7,6 +7,7 @@ import { NO_AUTH } from '../lib/pb'
 
 const nav = [
   { to: '/', label: '总览', icon: LayoutDashboard, end: true },
+  { to: '/traffic', label: '流量', icon: Activity },
   { to: '/containers', label: '容器', icon: Boxes },
   { to: '/alerts', label: '报警', icon: Bell },
 ]
