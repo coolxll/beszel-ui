@@ -22,15 +22,15 @@ export interface SystemInfo {
   t?: number // threads
   m?: string // cpu model
   u?: number // uptime (seconds)
-  b?: number // bandwidth total bytes (monthly)
-  bb?: number // bandwidth bytes (current)
+  b?: number // legacy bandwidth field (not a monthly counter in Beszel 0.19)
+  bb?: number // aggregate current bandwidth, KiB/s (directionless)
   cpu?: number // cpu percent 0-100
   mp?: number // memory percent
   dp?: number // disk percent
-  du?: number // disk used bytes
-  dt?: number // disk total bytes
-  ns?: number // network sent bytes/s
-  nr?: number // network received bytes/s
+  du?: number // legacy field; current disk values live in system_stats
+  dt?: number // legacy field; not total disk capacity in Beszel 0.19
+  ns?: number // legacy network sent bytes/s
+  nr?: number // legacy network received bytes/s
   tmax?: number // max temp
   la?: [number, number, number] // loadavg
   os?: number // os enum
@@ -52,7 +52,11 @@ export interface SystemStat extends PBRecord {
     cpu?: number
     mp?: number
     dp?: number
-    du?: number
+    d?: number // disk total, GiB
+    du?: number // disk used, GiB
+    b?: [number, number] // aggregate [received, sent], KiB/s
+    ni?: Record<string, [number, number, number, number]> // per-interface rates + totals, KiB units
+    // Legacy fields kept for older Beszel/mock payload compatibility.
     ns?: number
     nr?: number
     tmax?: number

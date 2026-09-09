@@ -1,3 +1,4 @@
+import { diskMetrics, networkRates, type StatsPayload } from './metrics'
 import type { System } from './types'
 
 /** Beszel `info.os` enum → display metadata. Values from beszel-agent source. */
@@ -24,28 +25,44 @@ export interface FleetStats {
   /** aggregate current throughput, bytes/s */
   recvBps: number
   sentBps: number
-  /** sum of monthly bandwidth counters `info.b`, bytes */
-  monthBytes: number
+  diskUsedBytes: number
+  diskTotalBytes: number
 }
 
-export function aggregateFleet(systems: System[]): FleetStats {
+export function aggregateFleet(
+  systems: System[],
+  latestStats: Map<string, StatsPayload>,
+): FleetStats {
   let up = 0
   let down = 0
   let paused = 0
   let recvBps = 0
   let sentBps = 0
-  let monthBytes = 0
+  let diskUsedBytes = 0
+  let diskTotalBytes = 0
   for (const s of systems) {
     if (s.status === 'up') {
       up++
-      recvBps += s.info?.nr ?? 0
-      sentBps += s.info?.ns ?? 0
-      monthBytes += s.info?.b ?? 0
+      const rates = networkRates(latestStats.get(s.id))
+      recvBps += rates.recvBps ?? 0
+      sentBps += rates.sentBps ?? 0
+      const disk = diskMetrics(s.info ?? {}, latestStats.get(s.id))
+      diskUsedBytes += disk.usedBytes ?? 0
+      diskTotalBytes += disk.totalBytes ?? 0
     } else if (s.status === 'paused') {
       paused++
     } else {
       down++
     }
   }
-  return { total: systems.length, up, down, paused, recvBps, sentBps, monthBytes }
+  return {
+    total: systems.length,
+    up,
+    down,
+    paused,
+    recvBps,
+    sentBps,
+    diskUsedBytes,
+    diskTotalBytes,
+  }
 }

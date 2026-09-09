@@ -1,6 +1,7 @@
 import { Link } from 'react-router'
 import { ArrowDown, ArrowUp, Cpu, HardDrive, MemoryStick } from 'lucide-react'
 import type { System } from '../lib/types'
+import { diskMetrics, networkRates, type StatsPayload } from '../lib/metrics'
 import { formatBytes, formatBytesPerSec, formatPercent, formatUptime } from '../lib/format'
 import { osMeta } from '../lib/fleet'
 import { flagForSystem } from '../lib/flags'
@@ -9,16 +10,19 @@ import Sparkline from './Sparkline'
 
 interface Props {
   system: System
+  stats?: StatsPayload
   cpuTrail?: number[]
   /** Mock-only: friendly alias shown next to the name (e.g. "主控网关"). */
   alias?: string
 }
 
-export default function ServerCard({ system, cpuTrail, alias }: Props) {
+export default function ServerCard({ system, stats, cpuTrail, alias }: Props) {
   const info = system.info ?? {}
   const isUp = system.status === 'up'
   const os = osMeta(info.os)
   const flag = flagForSystem(system)
+  const disk = diskMetrics(info, stats)
+  const network = networkRates(stats)
 
   return (
     <Link
@@ -91,8 +95,8 @@ export default function ServerCard({ system, cpuTrail, alias }: Props) {
         <MetricRow
           icon={<HardDrive size={12} />}
           label="磁盘"
-          value={`${formatBytes(info.du)} / ${formatBytes(info.dt)}`}
-          percent={info.dp}
+          value={`${formatBytes(disk.usedBytes)} / ${formatBytes(disk.totalBytes)}`}
+          percent={disk.percent}
           tone="amber"
         />
       </div>
@@ -100,11 +104,11 @@ export default function ServerCard({ system, cpuTrail, alias }: Props) {
       <div className="mt-3 flex items-center justify-between border-t border-zinc-200 pt-2 text-[11px] text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
         <span className="inline-flex items-center gap-1">
           <ArrowDown size={11} className="text-emerald-500" />
-          {isUp ? formatBytesPerSec(info.nr) : '—'}
+          {isUp ? formatBytesPerSec(network.recvBps) : '—'}
         </span>
         <span className="inline-flex items-center gap-1">
           <ArrowUp size={11} className="text-sky-500" />
-          {isUp ? formatBytesPerSec(info.ns) : '—'}
+          {isUp ? formatBytesPerSec(network.sentBps) : '—'}
         </span>
       </div>
     </Link>

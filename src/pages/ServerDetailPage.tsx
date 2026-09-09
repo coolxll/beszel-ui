@@ -6,9 +6,9 @@ import { useSystemStats } from '../hooks/useSystemStats'
 import { useContainers } from '../hooks/useContainers'
 import StatusDot from '../components/StatusDot'
 import TimeSeriesChart from '../components/charts/TimeSeriesChart'
-import DonutChart from '../components/charts/DonutChart'
 import { osMeta } from '../lib/fleet'
 import { flagForSystem } from '../lib/flags'
+import { diskMetrics, networkRates } from '../lib/metrics'
 import {
   formatBytes,
   formatBytesPerSec,
@@ -40,15 +40,9 @@ export default function ServerDetailPage() {
   const os = osMeta(info.os)
   const flag = flagForSystem(system)
 
-  // Build traffic donut slices from bandwidth counters.
-  //   b  = monthly bandwidth total (bytes)
-  //   bb = current bandwidth counter (bytes; reset monthly or by daemon)
-  // We show "本月已用" vs "本月剩余" if we can infer a quota; otherwise
-  // split current month into rx/tx estimate using live rates as weights.
-  const monthTotal = info.b ?? 0
-  const monthCurrent = info.bb ?? 0
-  const monthRemain = Math.max(0, monthTotal - monthCurrent)
-  const hasQuota = monthTotal > 0 && monthCurrent >= 0 && monthTotal >= monthCurrent
+  const latestStats = stats[stats.length - 1]?.stats
+  const disk = diskMetrics(info, latestStats)
+  const network = networkRates(latestStats)
 
   return (
     <div className="space-y-5">
@@ -81,11 +75,11 @@ export default function ServerDetailPage() {
         <StatCard label="内存" value={formatPercent(info.mp)} />
         <StatCard
           label="磁盘"
-          value={`${formatBytes(info.du)} / ${formatBytes(info.dt)}`}
+          value={`${formatBytes(disk.usedBytes)} / ${formatBytes(disk.totalBytes)}`}
         />
         <StatCard
           label="网络"
-          value={`↓ ${formatBytesPerSec(info.nr)} ↑ ${formatBytesPerSec(info.ns)}`}
+          value={`↓ ${formatBytesPerSec(network.recvBps)} ↑ ${formatBytesPerSec(network.sentBps)}`}
         />
       </section>
 
@@ -138,52 +132,18 @@ export default function ServerDetailPage() {
               {
                 label: '接收',
                 color: '#34d399',
-                values: stats.map((s) => s.stats.nr ?? 0),
+                values: stats.map((s) => networkRates(s.stats).recvBps ?? 0),
               },
               {
                 label: '发送',
                 color: '#38bdf8',
-                values: stats.map((s) => s.stats.ns ?? 0),
+                values: stats.map((s) => networkRates(s.stats).sentBps ?? 0),
               },
             ]}
-            format={(v) => formatBytes(v)}
+            format={(v) => formatBytesPerSec(v)}
           />
         </ChartCard>
       </section>
-
-      {(monthTotal > 0 || monthCurrent > 0) && (
-        <section>
-          <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
-            <h3 className="mb-3 text-sm font-medium text-zinc-800 dark:text-zinc-300">
-              本月流量
-            </h3>
-            {hasQuota ? (
-              <DonutChart
-                centerLabel="本月配额"
-                centerValue={formatBytes(monthTotal)}
-                slices={[
-                  { label: '已用', value: monthCurrent, color: '#10b981' },
-                  { label: '剩余', value: monthRemain, color: '#3f3f46' },
-                ]}
-              />
-            ) : (
-              <DonutChart
-                centerLabel="本月累计"
-                centerValue={formatBytes(monthCurrent || monthTotal)}
-                slices={[
-                  { label: '接收 (rx)', value: (monthCurrent || monthTotal) * 0.7, color: '#10b981' },
-                  { label: '发送 (tx)', value: (monthCurrent || monthTotal) * 0.3, color: '#38bdf8' },
-                ]}
-              />
-            )}
-            <p className="mt-2 text-[10px] text-zinc-500">
-              {hasQuota
-                ? '基于 Beszel 上报的带宽配额 (info.b) 与当前用量 (info.bb)。'
-                : '未配置带宽配额时按 7:3 估算 rx/tx 比例（Beszel 不分别上报月度 rx/tx）。'}
-            </p>
-          </div>
-        </section>
-      )}
 
       <section>
         <h2 className="mb-2 text-sm font-semibold text-zinc-800 dark:text-zinc-300">

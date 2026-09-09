@@ -61,19 +61,19 @@ interface SystemSeed {
   nsBaseKB: number
   uptimeSec: number
   status: System['status']
-  monthGB: number // monthly bandwidth total
+  diskGB: number
   os: number
 }
 
 const SEEDS: SystemSeed[] = [
-  { id: 's1', name: 'rn-direct', host: 'edge-gw-01', alias: '主控网关', hw: '3 vCPU · 3.8 GB RAM · 62 GB SSD (Ubuntu 22.04)', cpuBase: 15.7, mpBase: 54.6, dpBase: 41, nrBaseKB: 0.08, nsBaseKB: 0.02, uptimeSec: 12 * 86400, status: 'up', monthGB: 320, os: 0 },
-  { id: 's2', name: 'corp172-dev', host: 'corp172', alias: '高性能开发机', hw: '12C24T · 62.4 GB RAM · 2.7 TB (CentOS 7)', cpuBase: 0.4, mpBase: 7.2, dpBase: 1.3, nrBaseKB: 0.009, nsBaseKB: 0.003, uptimeSec: 3 * 86400, status: 'up', monthGB: 580, os: 0 },
-  { id: 's3', name: 'wujie', host: 'wujie', alias: '机械革命 无界15X', hw: '8C16T R7-8745HS · 15.3 GB RAM · 1 TB NVMe (Win11 WSL2)', cpuBase: 0.6, mpBase: 18.9, dpBase: 0.9, nrBaseKB: 0.06, nsBaseKB: 0.02, uptimeSec: 40 * 86400, status: 'up', monthGB: 120, os: 1 },
-  { id: 's4', name: 'ddrk', host: 'ddrk', alias: 'DediRock 美西节点', hw: '1 vCPU · 1.9 GB RAM · 29 GB SSD (Debian 13)', cpuBase: 2.2, mpBase: 25.4, dpBase: 19.5, nrBaseKB: 0.012, nsBaseKB: 0.004, uptimeSec: 86 * 86400, status: 'up', monthGB: 240, os: 0 },
-  { id: 's5', name: 'jph2', host: 'jph2', alias: '日本 VPS', hw: '1 vCPU · 1.0 GB RAM · 5 GB SSD (Ubuntu 22.04)', cpuBase: 29.1, mpBase: 54.6, dpBase: 66.6, nrBaseKB: 0.007, nsBaseKB: 0.002, uptimeSec: 7 * 86400, status: 'up', monthGB: 180, os: 0 },
-  { id: 's6', name: 'la-tri', host: 'la-tri', alias: '洛杉矶 VPS', hw: '1 vCPU · 1.0 GB RAM · 10 GB SSD (Debian 13)', cpuBase: 0.9, mpBase: 63.7, dpBase: 56.2, nrBaseKB: 0.014, nsBaseKB: 0.005, uptimeSec: 0, status: 'down', monthGB: 0, os: 0 },
-  { id: 's7', name: 'r9kp-wsl', host: 'r9kp-wsl', alias: 'R9000P 工作站', hw: '8C16T · 15.5 GB RAM · 1 TB NVMe (Win11 WSL2)', cpuBase: 1.8, mpBase: 17.6, dpBase: 0.9, nrBaseKB: 0.06, nsBaseKB: 0.02, uptimeSec: 2 * 86400, status: 'up', monthGB: 90, os: 1 },
-  { id: 's8', name: 'k14', host: 'k14', alias: 'DF-K14 轻量终端', hw: '2 vCPU · 3.7 GB RAM · 1 TB (Arch Linux)', cpuBase: 0.9, mpBase: 30.8, dpBase: 1.4, nrBaseKB: 0.001, nsBaseKB: 0.0005, uptimeSec: 5 * 86400, status: 'up', monthGB: 45, os: 0 },
+  { id: 's1', name: 'rn-direct', host: 'edge-gw-01', alias: '主控网关', hw: '3 vCPU · 3.8 GB RAM · 62 GB SSD (Ubuntu 22.04)', cpuBase: 15.7, mpBase: 54.6, dpBase: 41, nrBaseKB: 0.08, nsBaseKB: 0.02, uptimeSec: 12 * 86400, status: 'up', diskGB: 62, os: 0 },
+  { id: 's2', name: 'corp172-dev', host: 'corp172', alias: '高性能开发机', hw: '12C24T · 62.4 GB RAM · 2.7 TB (CentOS 7)', cpuBase: 0.4, mpBase: 7.2, dpBase: 1.3, nrBaseKB: 0.009, nsBaseKB: 0.003, uptimeSec: 3 * 86400, status: 'up', diskGB: 2765, os: 0 },
+  { id: 's3', name: 'wujie', host: 'wujie', alias: '机械革命 无界15X', hw: '8C16T R7-8745HS · 15.3 GB RAM · 1 TB NVMe (Win11 WSL2)', cpuBase: 0.6, mpBase: 18.9, dpBase: 0.9, nrBaseKB: 0.06, nsBaseKB: 0.02, uptimeSec: 40 * 86400, status: 'up', diskGB: 1024, os: 1 },
+  { id: 's4', name: 'ddrk', host: 'ddrk', alias: 'DediRock 美西节点', hw: '1 vCPU · 1.9 GB RAM · 29 GB SSD (Debian 13)', cpuBase: 2.2, mpBase: 25.4, dpBase: 19.5, nrBaseKB: 0.012, nsBaseKB: 0.004, uptimeSec: 86 * 86400, status: 'up', diskGB: 29, os: 0 },
+  { id: 's5', name: 'jph2', host: 'jph2', alias: '日本 VPS', hw: '1 vCPU · 1.0 GB RAM · 5 GB SSD (Ubuntu 22.04)', cpuBase: 29.1, mpBase: 54.6, dpBase: 66.6, nrBaseKB: 0.007, nsBaseKB: 0.002, uptimeSec: 7 * 86400, status: 'up', diskGB: 5, os: 0 },
+  { id: 's6', name: 'la-tri', host: 'la-tri', alias: '洛杉矶 VPS', hw: '1 vCPU · 1.0 GB RAM · 10 GB SSD (Debian 13)', cpuBase: 0.9, mpBase: 63.7, dpBase: 56.2, nrBaseKB: 0.014, nsBaseKB: 0.005, uptimeSec: 0, status: 'down', diskGB: 10, os: 0 },
+  { id: 's7', name: 'r9kp-wsl', host: 'r9kp-wsl', alias: 'R9000P 工作站', hw: '8C16T · 15.5 GB RAM · 1 TB NVMe (Win11 WSL2)', cpuBase: 1.8, mpBase: 17.6, dpBase: 0.9, nrBaseKB: 0.06, nsBaseKB: 0.02, uptimeSec: 2 * 86400, status: 'up', diskGB: 1024, os: 1 },
+  { id: 's8', name: 'k14', host: 'k14', alias: 'DF-K14 轻量终端', hw: '2 vCPU · 3.7 GB RAM · 1 TB (Arch Linux)', cpuBase: 0.9, mpBase: 30.8, dpBase: 1.4, nrBaseKB: 0.001, nsBaseKB: 0.0005, uptimeSec: 5 * 86400, status: 'up', diskGB: 1024, os: 0 },
 ]
 
 function makeSystem(seed: SystemSeed, tickOffsetSec: number): System {
@@ -96,12 +96,6 @@ function makeSystem(seed: SystemSeed, tickOffsetSec: number): System {
       cpu: seed.cpuBase,
       mp: seed.mpBase,
       dp: seed.dpBase,
-      du: 320 * 1024 ** 3,
-      dt: 768 * 1024 ** 3,
-      ns: seed.nsBaseKB * 1024,
-      nr: seed.nrBaseKB * 1024,
-      b: seed.monthGB * 1024 ** 3,
-      bb: seed.monthGB * 1024 ** 3 * 0.6,
       la: [seed.cpuBase / 25, seed.cpuBase / 30, seed.cpuBase / 35],
       os: seed.os,
     },
@@ -149,9 +143,9 @@ function buildInitialLive(): MockLive {
           cpu,
           mp,
           dp,
-          du: 320 * 1024 ** 3,
-          ns: nsKB * 1024,
-          nr: nrKB * 1024,
+          d: seed.diskGB,
+          du: seed.diskGB * dp / 100,
+          b: [nrKB, nsKB],
         },
       })
     }
@@ -164,8 +158,6 @@ function buildInitialLive(): MockLive {
       sys.info.cpu = last.stats.cpu
       sys.info.mp = last.stats.mp
       sys.info.dp = last.stats.dp
-      sys.info.ns = last.stats.ns
-      sys.info.nr = last.stats.nr
     }
   }
 
@@ -311,6 +303,8 @@ export function tickMock() {
   if (live.version % 5 === 0) {
     for (const sys of live.systems) {
       if (sys.status !== 'up' || !sys.info) continue
+      const seed = SEEDS.find((s) => s.id === sys.id)
+      if (!seed) continue
       const series = live.stats.get(sys.id)
       if (!series) continue
       const ts = new Date().toISOString()
@@ -325,9 +319,12 @@ export function tickMock() {
           cpu: sys.info.cpu ?? 0,
           mp: sys.info.mp ?? 0,
           dp: sys.info.dp ?? 0,
-          du: sys.info.du ?? 0,
-          ns: sys.info.ns ?? 0,
-          nr: sys.info.nr ?? 0,
+          d: seed.diskGB,
+          du: seed.diskGB * (sys.info.dp ?? 0) / 100,
+          b: [
+            (sys.info.nr ?? 0) / 1024,
+            (sys.info.ns ?? 0) / 1024,
+          ],
         },
       })
       if (series.length > POINTS) series.shift()

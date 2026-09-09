@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, Activity } from 'lucide-react'
+import { ArrowDown, ArrowUp, Activity, HardDrive } from 'lucide-react'
 import type { FleetStats } from '../lib/fleet'
 import { formatBytes, formatBytesPerSec } from '../lib/format'
 
@@ -30,9 +30,9 @@ export default function FleetStatsBar({ stats }: Props) {
         value={formatBytesPerSec(stats.sentBps)}
       />
       <Stat
-        icon={<Activity size={14} className="text-amber-500" />}
-        label="本月流量"
-        value={formatBytes(stats.monthBytes)}
+        icon={<HardDrive size={14} className="text-amber-500" />}
+        label="磁盘已用 / 总量"
+        value={`${formatBytes(stats.diskUsedBytes)} / ${formatBytes(stats.diskTotalBytes)}`}
       />
     </div>
   )

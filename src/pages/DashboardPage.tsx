@@ -5,7 +5,7 @@ import ServerCard from '../components/ServerCard'
 import FleetStatsBar from '../components/FleetStatsBar'
 
 export default function DashboardPage() {
-  const { systems, cpuTrail, meta, loading, error } = useSystems()
+  const { systems, cpuTrail, latestStats, meta, loading, error } = useSystems()
   const [query, setQuery] = useState('')
 
   const filtered = useMemo(() => {
@@ -19,7 +19,10 @@ export default function DashboardPage() {
     )
   }, [systems, query])
 
-  const fleet = useMemo(() => aggregateFleet(systems), [systems])
+  const fleet = useMemo(
+    () => aggregateFleet(systems, latestStats),
+    [systems, latestStats],
+  )
 
   return (
     <div className="space-y-4">
@@ -60,6 +63,7 @@ export default function DashboardPage() {
             <ServerCard
               key={s.id}
               system={s}
+              stats={latestStats.get(s.id)}
               cpuTrail={cpuTrail.get(s.id)}
               alias={meta.get(s.id)?.alias}
             />
