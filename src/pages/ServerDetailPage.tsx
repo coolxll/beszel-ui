@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useParams } from 'react-router'
 import { ArrowLeft } from 'lucide-react'
-import { useSystems } from '../hooks/useSystems'
+import { useSystems } from '../hooks/SystemsContext'
 import { useSystemStats } from '../hooks/useSystemStats'
 import { useContainers } from '../hooks/useContainers'
 import StatusDot from '../components/StatusDot'

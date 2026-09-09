@@ -76,7 +76,7 @@ function counterDelta(previous: number, current: number) {
   return current >= previous ? current - previous : current
 }
 
-function recordTime(value: string) {
+export function recordTime(value: string) {
   const normalized = value.replace(' ', 'T')
   const withZone = /(?:Z|[+-]\d\d:\d\d)$/.test(normalized)
     ? normalized

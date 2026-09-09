@@ -33,7 +33,7 @@ export default function TimeSeriesChart({
   if (allValues.length === 0) {
     return (
       <div
-        className="flex items-center justify-center rounded border border-zinc-800 bg-zinc-900/30 text-xs text-zinc-500"
+        className="flex items-center justify-center rounded border border-zinc-200 bg-zinc-100 text-xs text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/30"
         style={{ height }}
       >
         暂无数据
@@ -64,7 +64,7 @@ export default function TimeSeriesChart({
             x2={width}
             y1={height * r}
             y2={height * r}
-            stroke="#27272a"
+            className="stroke-zinc-200 dark:stroke-zinc-800"
             strokeWidth={1}
           />
         ))}
@@ -98,7 +98,7 @@ export default function TimeSeriesChart({
                 style={{ backgroundColor: s.color }}
               />
               {s.label}
-              <span className="font-mono text-zinc-200">
+              <span className="font-mono text-zinc-800 dark:text-zinc-200">
                 {last === undefined ? '—' : (format?.(last) ?? last.toFixed(1))}
               </span>
             </span>

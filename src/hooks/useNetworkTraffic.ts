@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { NO_AUTH, pb } from '../lib/pb'
 import { getMockLive } from '../lib/mock'
-import { networkTotalsBetween, type NetworkTotals } from '../lib/metrics'
+import { networkTotalsBetween, recordTime, type NetworkTotals } from '../lib/metrics'
 import type { System, SystemStat } from '../lib/types'
 
 export interface PeriodTraffic {
@@ -145,12 +145,4 @@ function periodStarts() {
 
 function toPocketBaseDate(date: Date) {
   return date.toISOString().replace('T', ' ').slice(0, 19)
-}
-
-function recordTime(value: string) {
-  const normalized = value.replace(' ', 'T')
-  const withZone = /(?:Z|[+-]\d\d:\d\d)$/.test(normalized)
-    ? normalized
-    : `${normalized}Z`
-  return Date.parse(withZone)
 }

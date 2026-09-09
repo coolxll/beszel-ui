@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useContainers } from '../hooks/useContainers'
-import { useSystems } from '../hooks/useSystems'
+import { useSystems } from '../hooks/SystemsContext'
 import { formatBytes, formatPercent } from '../lib/format'
 
 export default function ContainersPage() {

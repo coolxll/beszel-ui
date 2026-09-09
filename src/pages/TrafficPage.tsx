@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Link } from 'react-router'
 import { useNetworkTraffic } from '../hooks/useNetworkTraffic'
-import { useSystems } from '../hooks/useSystems'
+import { useSystems } from '../hooks/SystemsContext'
 import { formatBytes } from '../lib/format'
 import type { NetworkTotals } from '../lib/metrics'
 

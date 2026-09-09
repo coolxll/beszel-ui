@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useAlerts } from '../hooks/useAlerts'
-import { useSystems } from '../hooks/useSystems'
+import { useSystems } from '../hooks/SystemsContext'
 import { formatTime } from '../lib/format'
 import StatusDot from '../components/StatusDot'
 

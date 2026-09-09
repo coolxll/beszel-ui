@@ -334,8 +334,8 @@ export function tickMock() {
           d: seed.diskGB,
           du: seed.diskGB * (sys.info.dp ?? 0) / 100,
           b: [
-            (sys.info.nr ?? 0) / 1024,
-            (sys.info.ns ?? 0) / 1024,
+            sys.info.ns ?? 0,
+            sys.info.nr ?? 0,
           ],
         },
       })
